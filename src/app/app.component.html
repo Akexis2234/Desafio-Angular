@@ -1,19 +1,47 @@
-<header>PelisPlus
-    <nav class="up">nav
-        <nav class="ju" ></nav>
-    </nav>
-</header>
+<div class="page">
+  <header class="hero">
+    <div class="logo">Mi Tienda Artesanal</div>
+    <p class="welcome">{{ greeting }}, encuentra aquí tus pulseras favoritas.</p>
+  </header>
 
-<section class="s1">Seccion 1
-    <nav class="n1">nav1</nav>
-    <nav class="n12">nav12</nav>
-    
-</section>
+  <main class="products-layout">
+    <section class="products-grid">
+      <article
+        class="product-card"
+        *ngFor="let product of products"
+        [class.active]="selectedProduct?.id === product.id"
+        (click)="selectProduct(product)"
+      >
+        <img [src]="product.image" [alt]="product.name" />
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.description }}</p>
+        <strong>${{ product.price | number: '1.2-2' }}</strong>
 
-<section class="s2">Seccion 2
-    <nav class="n2"></nav>
-</section>
+        <button class="edit-btn" (click)="requestEdit(product, $event)">Editar</button>
 
-<footer>Footeer
-    <nav class="footer"></nav>
-</footer>
+        <div class="editor" *ngIf="product.editing" (click)="$event.stopPropagation()">
+          <label>
+            Cambiar precio:
+            <input type="number" min="0.01" step="0.01" [value]="product.price" (input)="updatePrice(product, $any($event.target).value)" />
+          </label>
+          <label>
+            Cambiar imagen:
+            <input type="file" accept="image/*" (change)="updateImage(product, $event)" />
+          </label>
+        </div>
+      </article>
+    </section>
+
+    <aside class="detail-panel" *ngIf="selectedProduct">
+      <img [src]="selectedProduct.image" [alt]="selectedProduct.name" />
+      <h2>{{ selectedProduct.name }}</h2>
+      <p>{{ selectedProduct.description }}</p>
+      <p class="price">Precio: ${{ selectedProduct.price | number: '1.2-2' }}</p>
+    </aside>
+  </main>
+
+  <footer class="contact">
+    <p>¿Te interesa un producto? Escríbeme por WhatsApp.</p>
+    <a [href]="getWhatsappLink()" target="_blank" rel="noopener noreferrer">Contactar por WhatsApp</a>
+  </footer>
+</div>
